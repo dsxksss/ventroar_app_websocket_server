@@ -3,8 +3,17 @@ const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const port = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
+let USERS = [];
+let INDEX = 0;
+
+app.get("/", (_, res) => {
   res.sendFile("index.html", { root: __dirname });
+});
+
+io.on("connection", _ => {
+  USERS.push("user:" + (INDEX + 1));
+  console.log(`user ${USERS[INDEX]} connected`);
+  INDEX++;
 });
 
 io.on("connection", socket => {
